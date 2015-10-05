@@ -1,9 +1,17 @@
+mongo:
+  image: mongo
 simpleapp:
-  build: ./go-docker-simpleapp  ports:
+  build: ./go-docker-simpleapp
+  ports:
     - "8080"
+  links:
+    - "mongo:mongo"
   environment:
+    DATABASE_PORT_27017_TCP_ADDR: mongo
+    DB_NAME: TEST
     SERVICE_NAME: simpleapp
     SERVICE_TAGS: production
+
 
 consul:
   command: -server -bootstrap
