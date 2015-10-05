@@ -1,0 +1,32 @@
+simpleapp:
+  build: ./go-docker-simpleapp  ports:
+    - "8080"
+  environment:
+    SERVICE_NAME: simpleapp
+    SERVICE_TAGS: production
+
+consul:
+  command: -server -bootstrap
+  image: progrium/consul:latest
+  ports:
+    - "8400:8400"
+    - "8500:8500"
+    - "8600:53/udp"
+    - "172.17.42.1:53:53/udp"
+
+registrator:
+  command:  -ip=192.168.0.13 consul://consul:8500
+  image: gliderlabs/registrator:latest
+  volumes:
+    - "/var/run/docker.sock:/tmp/docker.sock"
+  links:
+    - consul
+
+lb:
+  build: ./lb
+  links:
+    - consul
+  ports:
+    - "80:80"
+  volumes:
+    - /etc/consul-templates:/etc/consul-templates
