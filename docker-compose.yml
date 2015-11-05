@@ -11,7 +11,7 @@ simpleapp:
   ports:
     - "8080"
   dns:
-    - 172.17.42.1
+    - <YOUR DOCKER0>
   dns_search: service.consul
   environment:
     DATABASE_PORT_27017_TCP_ADDR: mongo
@@ -27,10 +27,10 @@ consul:
     - "8400:8400"
     - "8500:8500"
     - "8600:53/udp"
-    - "172.17.42.1:53:53/udp"
+    - "<YOUR DOCKER0>:53:53/udp"
 
 registrator:
-  command:  -ip=192.168.0.13 consul://consul:8500
+  command:  -ip=<YOUR DOCKER HOST IP> consul://consul:8500
   image: gliderlabs/registrator:latest
   volumes:
     - "/var/run/docker.sock:/tmp/docker.sock"
@@ -43,5 +43,3 @@ lb:
     - consul
   ports:
     - "80:80"
-  volumes:
-    - /etc/consul-templates:/etc/consul-templates
