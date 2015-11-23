@@ -2,7 +2,7 @@ mongo:
   image: mongo
   environment:
     SERVICE_NAME: mongo
-    SERVICE_TAGS: production
+    SERVICE_TAGS: simple
   ports:
     - "27017:27017"
 
@@ -16,9 +16,8 @@ simpleapp:
   environment:
     DATABASE_PORT_27017_TCP_ADDR: mongo
     DB_NAME: TEST
-    SERVICE_NAME: simpleapp
-    SERVICE_TAGS: production
-
+    SERVICE_NAME: app
+    SERVICE_TAGS: simple
 
 consul:
   command: -server -bootstrap
@@ -43,3 +42,5 @@ lb:
     - consul
   ports:
     - "80:80"
+  environment:
+    CONSUL_URL: consul:8500
